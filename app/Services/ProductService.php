@@ -7,6 +7,7 @@ use App\Http\Requests\ProductCreateRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductResourceCollection;
+use Illuminate\Support\Arr;
 
 class ProductService
 {
@@ -17,12 +18,21 @@ class ProductService
 
     public function create(ProductCreateRequest $request)
     {
-        return new ProductResource(Product::create($request->all()));
+        $params = Arr::except($request->all(), ['categoryIds']);
+        $product = Product::create($params);
+        if ($request->categoryIds && count($request->categoryIds)) {
+            $product->categories()->sync($request->categoryIds);
+        }
+        return new ProductResource($product);
     }
 
     public function update(ProductUpdateRequest $request)
     {
-        return new ProductResource(Product::find($request->id)->update($request->all()));
+        $product = Product::find($request->id)->update($request->all());
+        if ($request->categoryIds && count($request->categoryIds)) {
+            $product->categories()->sync($request->categoryIds);
+        }
+        return new ProductResource($product);
     }
 
     public function destroy(int $product_id)
