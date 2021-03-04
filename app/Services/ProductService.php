@@ -8,6 +8,7 @@ use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductResourceCollection;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 
 class ProductService
 {
@@ -18,6 +19,19 @@ class ProductService
 
     public function create(array $params)
     {
+        $validator = Validator::make($params, [
+            'title' => 'required|string|min:3|max:12',
+            'eld' => 'sometimes|nullable|integer',
+            'price' => 'numeric|min:0|max:200',
+            'categoryIds' => 'sometimes|nullable|array',
+            'categoryIds.*' => 'integer'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/')
+                ->withErrors($validator);
+        }
+
         $data = Arr::except($params, ['categoryIds']);
         $product = Product::create($data);
         if ($params['categoryIds'] && count($params['categoryIds'])) {
@@ -28,6 +42,20 @@ class ProductService
 
     public function update(array $params)
     {
+        $validator = Validator::make($params, [
+            'id' => 'required|exists:products,id',
+            'title' => 'required|string|min:3|max:12',
+            'eld' => 'sometimes|nullable|integer',
+            'price' => 'numeric|min:0|max:200',
+            'categoryIds' => 'sometimes|nullable|array',
+            'categoryIds.*' => 'integer'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/')
+                ->withErrors($validator);
+        }
+
         $data = Arr::except($params, ['categoryIds']);
         $product = Product::find($params['id'])->update($data);
         if ($params['categoryIds'] && count($params['categoryIds'])) {

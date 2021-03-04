@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
-use App\Http\Requests\ProductCreateRequest;
-use App\Http\Requests\ProductUpdateRequest;
+
 
 class ProductController extends Controller
 {
@@ -17,7 +15,7 @@ class ProductController extends Controller
     }
 
 
-    public function create(ProductCreateRequest $request, ProductService $service)
+    public function create(Request $request, ProductService $service)
     {
         return response()->json($service->create($request->all()));
     }
@@ -29,7 +27,7 @@ class ProductController extends Controller
     }
 
 
-    public function update(ProductUpdateRequest $request, ProductService $service)
+    public function update(Request $request, ProductService $service)
     {
         return response()->json($service->update($request->all()));
     }
