@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('title', 12);
             $table->float('price', 8, 2)->default(0);
-            $table->integer('eld')->nullable();
+            $table->integer('eId')->nullable();
             $table->timestamps();
         });
     }

@@ -44,9 +44,15 @@ class ProcessJsons extends Command
         $products = json_decode(file_get_contents(base_path('products.json')), true);
         $elapsed = microtime(true) - $start;
         foreach ($categories as $category) {
+            if (strlen($category['title']) > 12) {
+                $category['title'] = substr($category['title'], 0, 12);
+            }
             $categoryService->create($category);
         }
         foreach ($products as $product) {
+            if (strlen($product['title']) > 12) {
+                $product['title'] = substr($product['title'], 0, 12);
+            }
             $productService->create($product);
         }
         $totalRows = count($categories) + count($products);
