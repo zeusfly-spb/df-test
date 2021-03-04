@@ -5,22 +5,24 @@ namespace App\Services;
 use App\Product;
 use App\Http\Requests\ProductCreateRequest;
 use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductResourceCollection;
 
 class ProductService
 {
     public function index()
     {
-        return Product::all();
+        return new ProductResourceCollection(Product::all());
     }
 
     public function create(ProductCreateRequest $request)
     {
-        return Product::create($request->all());
+        return new ProductResource(Product::create($request->all()));
     }
 
     public function update(ProductUpdateRequest $request)
     {
-        return Product::find($request->id)->update($request->all());
+        return new ProductResource(Product::find($request->id)->update($request->all()));
     }
 
     public function destroy(int $product_id)
@@ -30,6 +32,6 @@ class ProductService
 
     public function show(int $product_id)
     {
-        return Product::find($product_id);
+        return new ProductResource(Product::find($product_id));
     }
 }
