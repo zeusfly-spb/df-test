@@ -16,21 +16,22 @@ class ProductService
         return new ProductResourceCollection(Product::all());
     }
 
-    public function create(ProductCreateRequest $request)
+    public function create(array $params)
     {
-        $params = Arr::except($request->all(), ['categoryIds']);
-        $product = Product::create($params);
-        if ($request->categoryIds && count($request->categoryIds)) {
-            $product->categories()->sync($request->categoryIds);
+        $data = Arr::except($params, ['categoryIds']);
+        $product = Product::create($data);
+        if ($params['categoryIds'] && count($params['categoryIds'])) {
+            $product->categories()->sync($params['categoryIds']);
         }
         return new ProductResource($product);
     }
 
-    public function update(ProductUpdateRequest $request)
+    public function update(array $params)
     {
-        $product = Product::find($request->id)->update($request->all());
-        if ($request->categoryIds && count($request->categoryIds)) {
-            $product->categories()->sync($request->categoryIds);
+        $data = Arr::except($params, ['categoryIds']);
+        $product = Product::find($params['id'])->update($data);
+        if ($params['categoryIds'] && count($params['categoryIds'])) {
+            $product->categories()->sync($params['categoryIds']);
         }
         return new ProductResource($product);
     }

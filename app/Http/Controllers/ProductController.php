@@ -19,7 +19,7 @@ class ProductController extends Controller
 
     public function create(ProductCreateRequest $request, ProductService $service)
     {
-        return response()->json($service->create($request));
+        return response()->json($service->create($request->all()));
     }
 
 
@@ -31,7 +31,7 @@ class ProductController extends Controller
 
     public function update(ProductUpdateRequest $request, ProductService $service)
     {
-        return response()->json($service->update($request));
+        return response()->json($service->update($request->all()));
     }
 
     public function destroy(int $product_id, ProductService $service)
